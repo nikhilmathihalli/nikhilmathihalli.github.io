@@ -1,0 +1,21 @@
+{
+  "name": "nikhil-portfolio",
+  "version": "1.0.0",
+  "description": "Nikhil Mathihalli portfolio website",
+  "main": "index.html",
+  "scripts": {
+    "build": "tailwindcss build -i css/styles.css -o css/styles.css"
+  },
+  "keywords": [
+    "portfolio",
+    "tailwind",
+    "css"
+  ],
+  "author": "Nikhil Mathihalli",
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.5",
+    "tailwindcss": "^3.0.7"
+  }
+}
