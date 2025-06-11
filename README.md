@@ -1,3 +1,3 @@
 # About
 
-Please visit: [nikhilmathihalli.github.io](nikhilmathihalli.github.io)
+Please visit [here](https://nikhilmathihalli.github.io/).
