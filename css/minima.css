@@ -1,0 +1,650 @@
+/**
+ * Minima Jekyll Theme - Exact Replication
+ * Based on https://jekyll.github.io/minima/
+ */
+
+/* Reset and Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  background-color: rgba(0, 0, 0, 0);
+  color: rgb(0, 0, 0);
+}
+
+/* Root Container */
+#root,
+.root-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: auto;
+  background-color: #FEF9E7;
+  color: rgb(0, 0, 0);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+/* Links */
+a {
+  color: #111;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Navigation links should maintain their styles on hover */
+.site-nav .page-link:hover {
+  color: rgb(0, 0, 0);
+  background-color: #FEF9E7;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #111;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+h3 {
+  font-size: 1.25em;
+}
+
+h4 {
+  font-size: 1em;
+}
+
+h5 {
+  font-size: 0.875em;
+}
+
+h6 {
+  font-size: 0.85em;
+  color: #6a737d;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+/* Lists */
+ul, ol {
+  margin-top: 0;
+  margin-bottom: 10px;
+  padding-left: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+ul ul {
+  list-style-type: circle;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+ol {
+  list-style-type: decimal;
+}
+
+li {
+  display: list-item;
+  text-align: -webkit-match-parent;
+}
+
+li > p {
+  margin-top: 16px;
+}
+
+li + li {
+  margin-top: 0.25em;
+}
+
+/* Container */
+.wrapper {
+  max-width: calc(1200px - (60px * 2));
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 60px;
+  padding-left: 60px;
+  width: 100%;
+}
+
+@media screen and (max-width: 1200px) {
+  .wrapper {
+    max-width: calc(100% - (60px * 2));
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .wrapper {
+    max-width: calc(100% - (30px * 2));
+    padding-right: 30px;
+    padding-left: 30px;
+  }
+}
+
+/* Header */
+.site-header {
+  border-top: 4px solid #424242;
+  border-bottom: 1px solid #e8e8e8;
+  min-height: 56px;
+  position: relative;
+}
+
+.site-header .wrapper {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+@media screen and (min-width: 600px) {
+  .site-header .wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.site-title {
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 56px;
+  letter-spacing: -1px;
+  margin-bottom: 0;
+  float: left;
+}
+
+.site-title,
+.site-title:visited {
+  color: #424242;
+}
+
+.site-nav {
+  float: right;
+  line-height: normal;
+  display: flex;
+  align-items: center;
+}
+
+.site-nav .nav-trigger {
+  display: none;
+}
+
+.site-nav .menu-icon {
+  display: none;
+}
+
+.site-nav .page-link {
+  color: rgb(0, 0, 0);
+  background-color: #FEF9E7;
+  font-size: 24px;
+  font-weight: 400;
+  margin: 0px 12px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0s ease 0s;
+  display: inline-block;
+  line-height: 1;
+  padding: 12px 16px;
+}
+
+.site-nav .page-link:not(:last-child) {
+  margin-right: 0;
+}
+
+/* Dropdown Menu Styles */
+.site-nav .dropdown {
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+}
+
+.site-nav .dropdown::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: transparent;
+  display: none;
+  z-index: 999;
+  pointer-events: auto;
+}
+
+.site-nav .dropdown-content {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  background-color: #FEF9E7;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1000;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  padding: 5px 0;
+}
+
+.site-nav .dropdown-content a {
+  color: rgb(0, 0, 0);
+  background-color: #FEF9E7;
+  padding: 8px 15px;
+  text-decoration: none;
+  display: block;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.site-nav .dropdown-content a:hover {
+  background-color: #FEF9E7;
+  text-decoration: none;
+}
+
+.site-nav .dropdown:hover .dropdown-content,
+.site-nav .dropdown:hover::after {
+  display: block;
+}
+
+.site-nav .dropdown-content:hover {
+  display: block;
+}
+
+.site-nav .dropdown .page-link {
+  margin: 0px 12px;
+  font-size: 24px;
+  font-weight: 400;
+  color: rgb(0, 0, 0);
+  background-color: #FEF9E7;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0s ease 0s;
+  display: inline-block;
+  line-height: 1;
+  padding: 12px 16px;
+}
+
+/* Main Content */
+.page-content {
+  padding: 60px 0;
+  flex: 1;
+}
+
+@media screen and (max-width: 800px) {
+  .page-content {
+    padding: 40px 0;
+  }
+}
+
+.page-heading {
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.post-list {
+  margin-left: 0;
+  list-style: none;
+}
+
+.post-list > li {
+  margin-bottom: 50px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.post-list > li:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.post-meta {
+  font-size: 14px;
+  color: #828282;
+}
+
+.post-link {
+  display: block;
+  font-size: 24px;
+}
+
+.post-content {
+  margin-bottom: 30px;
+}
+
+.post-content h2 {
+  font-size: 32px;
+}
+
+.post-content h3 {
+  font-size: 26px;
+}
+
+.post-content h4 {
+  font-size: 20px;
+}
+
+.post-content h2,
+.post-content h3,
+.post-content h4 {
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.post-content p {
+  margin-bottom: 20px;
+}
+
+.post-content ul,
+.post-content ol {
+  margin-bottom: 15px;
+  padding-left: 30px;
+}
+
+.post-content li {
+  margin-bottom: 5px;
+}
+
+.post-content a {
+  color: #111;
+  text-decoration: underline;
+}
+
+.post-content a:hover {
+  color: #111;
+  text-decoration: underline;
+}
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid #e8e8e8;
+  padding: 30px 0;
+}
+
+.footer-heading {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.footer-col-wrapper {
+  font-size: 15px;
+  color: #828282;
+  margin-left: -15px;
+}
+
+.footer-col {
+  float: left;
+  margin-bottom: 15px;
+  padding-left: 15px;
+}
+
+.footer-col-1 {
+  width: calc(35% - (30px / 2));
+}
+
+.footer-col-2 {
+  width: calc(20% - (30px / 2));
+}
+
+.footer-col-3 {
+  width: calc(45% - (30px / 2));
+}
+
+.footer-col-wrapper::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.contact-list,
+.social-media-list {
+  list-style: none;
+  margin-left: 0;
+}
+
+.contact-list li,
+.social-media-list li {
+  margin-bottom: 5px;
+}
+
+.contact-list li:last-child,
+.social-media-list li:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 600px) {
+  .site-nav {
+    position: absolute;
+    top: 9px;
+    right: 15px;
+    background-color: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 5px;
+    text-align: right;
+  }
+
+  .site-nav label[for="nav-trigger"] {
+    display: block;
+    float: right;
+    width: 36px;
+    height: 36px;
+    z-index: 2;
+    cursor: pointer;
+  }
+
+  .site-nav .menu-icon {
+    display: block;
+    float: right;
+    width: 36px;
+    height: 26px;
+    line-height: 0;
+    padding-top: 10px;
+    text-align: center;
+  }
+
+  .site-nav .menu-icon > svg {
+    fill: #424242;
+  }
+
+  .site-nav input ~ .trigger {
+    clear: both;
+    display: none;
+  }
+
+  .site-nav input:checked ~ .trigger {
+    display: block;
+    padding-bottom: 5px;
+  }
+
+  .site-nav .page-link {
+    display: block;
+    padding: 5px 10px;
+    margin: 0px 12px;
+    font-size: 24px;
+    font-weight: 400;
+    color: rgb(0, 0, 0);
+    background-color: #FEF9E7;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0s ease 0s;
+  }
+
+  .site-nav .page-link:not(:last-child) {
+    margin-right: 0;
+  }
+
+  .site-nav .dropdown-content {
+    position: static;
+    display: block;
+    box-shadow: none;
+    border: none;
+    margin-top: 0;
+    padding-left: 20px;
+  }
+
+  .site-nav .dropdown-content a {
+    padding: 5px 10px;
+  }
+
+  .site-header .wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .site-title {
+    font-size: 22px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .footer-col-1,
+  .footer-col-2 {
+    width: calc(50% - (30px / 2));
+  }
+
+  .footer-col-3 {
+    width: calc(100% - (30px / 2));
+  }
+}
+
+/* Clearfix */
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Meta information styling */
+.meta {
+  font-size: 14px;
+  color: #828282;
+}
+
+/* Code blocks (for future use) */
+.highlight {
+  background-color: #f6f8fa;
+  border-radius: 3px;
+  font-size: 85%;
+  line-height: 1.45;
+  overflow: auto;
+  padding: 16px;
+}
+
+.highlight pre {
+  background-color: transparent;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Timeline Styles for Experience Page */
+.timeline {
+  position: relative;
+  padding-left: 40px;
+  margin-top: 30px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: #666;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 40px;
+  padding-left: 0;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -36px;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #666;
+  border: 2px solid #FEF9E7;
+  z-index: 1;
+  box-sizing: border-box;
+}
+
+.timeline-date {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 4px;
+  font-weight: 400;
+}
+
+.timeline-role {
+  font-size: 16px;
+  color: rgb(0, 0, 0);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.timeline-org {
+  font-size: 16px;
+  color: rgb(0, 0, 0);
+  margin-bottom: 8px;
+}
+
+.timeline-org a {
+  color: rgb(0, 0, 0);
+  text-decoration: underline;
+}
+
+.timeline-org a:hover {
+  text-decoration: underline;
+}
+
+.timeline-description {
+  font-size: 16px;
+  color: rgb(0, 0, 0);
+  margin-bottom: 8px;
+  line-height: 24px;
+}
+
+.timeline-tech {
+  font-size: 14px;
+  color: #666;
+  margin-top: 4px;
+  font-style: italic;
+}
