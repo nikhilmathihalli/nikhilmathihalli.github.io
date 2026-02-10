@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valentine's Day Plans 💕</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --card-bg: #ffffff;
+      --text-primary: #1a1a2e;
+      --text-secondary: #6b7280;
+      --accent-pink: #ec4899;
+      --accent-purple: #8b5cf6;
+      --border-color: #e5e7eb;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Login View Styles */
+    .login-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 48px;
+      max-width: 480px;
+      margin: 0 auto;
+      box-shadow: var(--shadow-xl);
+      text-align: center;
+    }
+
+    .login-emoji {
+      font-size: 64px;
+      margin-bottom: 24px;
+      display: block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .login-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .login-subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .password-input {
+      width: 100%;
+      padding: 16px 50px 16px 20px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 16px;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      background: #f9fafb;
+    }
+
+    .password-input:focus {
+      outline: none;
+      border-color: var(--accent-purple);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+      opacity: 0.6;
+      transition: opacity 0.2s ease;
+    }
+
+    .toggle-password:hover {
+      opacity: 1;
+    }
+
+    .unlock-btn {
+      width: 100%;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .unlock-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .unlock-btn:active {
+      transform: translateY(0);
+    }
+
+    .error-message {
+      color: #ef4444;
+      font-size: 14px;
+      margin-top: 12px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .error-message.show {
+      opacity: 1;
+    }
+
+    /* Main Content Styles */
+    .main-content {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: var(--shadow-xl);
+      display: none;
+    }
+
+    .main-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+      padding-bottom: 32px;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .header-emoji {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .header-title {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .header-subtitle {
+      font-size: 18px;
+      color: var(--text-secondary);
+    }
+
+    /* Category Section */
+    .category-section {
+      margin-bottom: 48px;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .category-icon {
+      font-size: 32px;
+    }
+
+    .category-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* Activity Cards Grid */
+    .activities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .activity-card {
+      background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+      border: 2px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .activity-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-pink), var(--accent-purple));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .activity-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--accent-purple);
+    }
+
+    .activity-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .activity-emoji {
+      font-size: 36px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .activity-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .activity-description {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .activity-details {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .detail-item::before {
+      content: '•';
+      color: var(--accent-pink);
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    /* View Toggle */
+    .view-container {
+      position: relative;
+      min-height: 400px;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        padding: 12px;
+      }
+
+      .login-card {
+        padding: 32px 24px;
+      }
+
+      .main-content {
+        padding: 24px;
+      }
+
+      .header-title {
+        font-size: 28px;
+      }
+
+      .category-title {
+        font-size: 20px;
+      }
+
+      .activities-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Loading Animation */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="view-container">
+      <!-- Login View -->
+      <div id="loginView" class="view active">
+        <div class="login-card">
+          <span class="login-emoji">💌</span>
+          <h1 class="login-title">Hi Swathi 💕</h1>
+          <p class="login-subtitle">enter the magic words...</p>
+          
+          <form id="loginForm">
+            <div class="input-group">
+              <input
+                type="password"
+                id="passwordInput"
+                class="password-input"
+                placeholder="Type the magic words..."
+                autocomplete="off"
+              />
+              <button type="button" id="togglePassword" class="toggle-password">👁️</button>
+            </div>
+            
+            <button type="submit" class="unlock-btn">
+              Unlock ✨
+            </button>
+            
+            <p id="errorMessage" class="error-message">
+              Oops! That's not the magic word 💭
+            </p>
+          </form>
+        </div>
+      </div>
+
+      <!-- Main Content View -->
+      <div id="mainContent" class="view main-content">
+        <div class="header">
+          <div class="header-emoji">💖</div>
+          <h1 class="header-title">Valentine's Day Adventure :)))))))</h1>
+          <p class="header-subtitle">Mix and match whatever sounds fun to you!</p>
+        </div>
+
+        <!-- Morning Activities -->
+        <section class="category-section">
+          <div class="category-header">
+            <span class="category-icon">🌅</span>
+            <h2 class="category-title">Morning Activities</h2>
+          </div>
+          
+          <div class="activities-grid">
+            <div class="activity-card">
+              <span class="activity-emoji">🥐</span>
+              <h3 class="activity-title">Japantown Stroll</h3>
+              <p class="activity-description">There's a lot of cute shops and cafes in Japantown!</p>
+              <div class="activity-details">
+                <div class="detail-item">Walk around Japantown together</div>
+                <div class="detail-item">Matcha + pastry at Jina Bakes (you can get a matcha latte and a slice of pie)</div>
+                <div class="detail-item">Browse little shops and bookstores</div>
+              </div>
+            </div>
+
+            <div class="activity-card">
+              <span class="activity-emoji">📸</span>
+              <h3 class="activity-title">Photo Booth Museum</h3>
+              <p class="activity-description">I know you've been wanting to go here!</p>
+              <div class="activity-details">
+                <div class="detail-item">Cute photo booth session</div>
+                <div class="detail-item">Fun props and backgrounds</div>
+                <div class="detail-item">Pookie</div>
+              </div>
+            </div>
+
+            <div class="activity-card">
+              <span class="activity-emoji">🏞️</span>
+              <h3 class="activity-title">Japanese Tea Garden</h3>
+              <p class="activity-description">I't apparently really pretty!</p>
+              <div class="activity-details">
+                <div class="detail-item">Pretty, quiet, and very photo-friendly</div>
+                <div class="detail-item">Time to wander and talk</div>
+                <div class="detail-item">Stroll through Golden Gate Park after</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Afternoon Activities -->
+        <section class="category-section">
+          <div class="category-header">
+            <span class="category-icon">☀️</span>
+            <h2 class="category-title">Afternoon Activities</h2>
+          </div>
+          
+          <div class="activities-grid">
+            <div class="activity-card">
+              <span class="activity-emoji">🖼️</span>
+              <h3 class="activity-title">SFMOMA Museum</h3>
+              <p class="activity-description">Could be a fun couple of hours.</p>
+              <div class="activity-details">
+                <div class="detail-item">Walk through galleries together</div>
+                <div class="detail-item">And I'll give you an art history lesson :).</div>
+              </div>
+            </div>
+
+            <div class="activity-card">
+              <span class="activity-emoji">🏺</span>
+              <h3 class="activity-title">Pottery Class</h3>
+              <p class="activity-description">Get our hands dirty at Clay by the Bay</p>
+              <div class="activity-details">
+                <div class="detail-item">Hands-on pottery class together</div>
+                <div class="detail-item">And it's something we can keep later</div>
+              </div>
+            </div>
+
+            <div class="activity-card">
+              <span class="activity-emoji">🌊</span>
+              <h3 class="activity-title">Aquarium of the Bay</h3>
+              <p class="activity-description">Walk through  underwater tunnels</p>
+              <div class="activity-details">
+                <div class="detail-item">Vibes</div>
+                <div class="detail-item">Sea creatures</div>
+              </div>
+            </div>
+
+            <div class="activity-card">
+              <span class="activity-emoji">🛍️</span>
+              <h3 class="activity-title">Fillmore Wandering</h3>
+              <p class="activity-description">Casual exploring and window shopping</p>
+              <div class="activity-details">
+                <div class="detail-item">Stroll down Fillmore Street</div>
+                <div class="detail-item">Dip into shops and little boutiques</div>
+                <div class="detail-item">Find a bookstore or cozy corner together</div>
+              </div>
+            </div>
+
+            <div class="activity-card">
+              <span class="activity-emoji">🌁</span>
+              <h3 class="activity-title">Marina Exploring</h3>
+              <p class="activity-description">Wander around the Marina at our own pace</p>
+              <div class="activity-details">
+                <div class="detail-item">Walk around the Marina</div>
+                <div class="detail-item">Browse random spots that look fun</div>
+                <div class="detail-item">Find a coffee or snack stop if we feel like it</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Evening Activities -->
+        <section class="category-section">
+          <div class="category-header">
+            <span class="category-icon">🌇</span>
+            <h2 class="category-title">Evening Activities</h2>
+          </div>
+          
+          <div class="activities-grid">
+            <div class="activity-card">
+              <span class="activity-emoji">⛰️</span>
+              <h3 class="activity-title">Battery to Bluff Trail</h3>
+              <p class="activity-description">Sunset hike with Golden Gate Bridge views</p>
+              <div class="activity-details">
+                <div class="detail-item">Golden Gate views while we walk</div>
+                <div class="detail-item">Feels adventurous but still relaxed</div>
+                <div class="detail-item">Perfect golden hour photos together</div>
+              </div>
+            </div>
+
+            <div class="activity-card">
+              <span class="activity-emoji">🌊</span>
+              <h3 class="activity-title">Marina / Crissy Sunset</h3>
+              <p class="activity-description">Simple sunset stroll by the water</p>
+              <div class="activity-details">
+                <div class="detail-item">Stroll along Crissy Field or the Marina</div>
+                <div class="detail-item">Soft ocean air, bridge in the distance</div>
+                <div class="detail-item">Easy, simple, very "just us" energy</div>
+              </div>
+            </div>
+
+            <div class="activity-card">
+              <span class="activity-emoji">🎬</span>
+              <h3 class="activity-title">Movie Night</h3>
+              <p class="activity-description">With candy!!</p>
+              <div class="activity-details">
+                <div class="detail-item">I'll pick a good movie bc u don't know any movies...</div>
+                <div class="detail-item">Blankets, snacks, and you leaning on my shoulder</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Food Spots -->
+        <section class="category-section">
+          <div class="category-header">
+            <span class="category-icon">🍽️</span>
+            <h2 class="category-title">Food Spots</h2>
+          </div>
+          
+          <div class="activities-grid">
+            <div class="activity-card">
+              <span class="activity-emoji">🥟</span>
+              <h3 class="activity-title">Dumpling Home</h3>
+              <p class="activity-description">Cozy lunch sharing dumplings and small plates</p>
+              <div class="activity-details">
+                <div class="detail-item">Share dumplings and little dishes</div>
+                <div class="detail-item">Warm, cozy, and fun to split everything</div>
+                <div class="detail-item">Lots of time to just sit and chat</div>
+              </div>
+            </div>
+
+            <div class="activity-card">
+              <span class="activity-emoji">🍵</span>
+              <h3 class="activity-title">Komeya no Bento</h3>
+              <p class="activity-description">Japanese bento boxes in the Marina</p>
+              <div class="activity-details">
+              </div>
+            </div>
+
+            <div class="activity-card">
+              <span class="activity-emoji">🍕</span>
+              <h3 class="activity-title">Angie's Slice</h3>
+              <p class="activity-description">Casual pizza stop, very us</p>
+              <div class="activity-details">
+                <div class="detail-item">Apparently it's REALLY famous! And apparently, I haven't been there yet.</div>
+              </div>
+            </div>
+
+            <div class="activity-card">
+              <span class="activity-emoji">🍨</span>
+              <h3 class="activity-title">Matcha & Mochi</h3>
+              <p class="activity-description">Sweet treats to end the night perfectly</p>
+              <div class="activity-details">
+                <div class="detail-item">Matcha, mochi, or any sweet treat we find</div>
+                <div class="detail-item">Take it to a bench with a view</div>
+                <div class="detail-item">End the night soft, calm, and full</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PASSWORD = "pookie-pie";
+    
+    const loginView = document.getElementById('loginView');
+    const mainContent = document.getElementById('mainContent');
+    const loginForm = document.getElementById('loginForm');
+    const passwordInput = document.getElementById('passwordInput');
+    const togglePassword = document.getElementById('togglePassword');
+    const errorMessage = document.getElementById('errorMessage');
+
+    // Toggle password visibility
+    togglePassword.addEventListener('click', () => {
+      const type = passwordInput.type === 'password' ? 'text' : 'password';
+      passwordInput.type = type;
+      togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+
+    // Handle form submission
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      if (passwordInput.value.trim() === PASSWORD) {
+        errorMessage.classList.remove('show');
+        loginView.classList.remove('active');
+        mainContent.classList.add('active');
+      } else {
+        errorMessage.classList.add('show');
+        passwordInput.value = '';
+        passwordInput.focus();
+      }
+    });
+
+    // Clear error on input
+    passwordInput.addEventListener('input', () => {
+      errorMessage.classList.remove('show');
+    });
+
+    // Auto-focus on load
+    window.addEventListener('load', () => {
+      passwordInput.focus();
+    });
+  </script>
+</body>
+</html>
