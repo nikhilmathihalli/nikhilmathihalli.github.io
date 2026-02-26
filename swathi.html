@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You 🤍</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0d0608;
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: 'Playfair Display', serif;
+  }
+
+  /* Ambient background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(180, 30, 60, 0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 20% 80%, rgba(120, 20, 40, 0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 80% 90%, rgba(160, 40, 70, 0.1) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Floating particles */
+  .particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 100, 130, 0.5);
+    border-radius: 50%;
+    animation: floatUp linear infinite;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(110vh) scale(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 0.5; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+  }
+
+  .hero {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 60px 20px 20px;
+    opacity: 0;
+    animation: fadeIn 1.5s ease forwards 0.5s;
+  }
+
+  .hero .subtitle {
+    font-family: 'Caveat', cursive;
+    color: rgba(255, 170, 185, 0.7);
+    font-size: 1.1rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-style: italic;
+    color: #fff;
+    line-height: 1.1;
+    text-shadow: 0 0 40px rgba(220, 80, 100, 0.4);
+  }
+
+  .hero h1 span {
+    color: #ff6b8a;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── HEART COLLAGE ── */
+  .heart-section {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+  }
+
+  .heart-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 60px);
+    grid-template-rows: repeat(7, 60px);
+    gap: 6px;
+  }
+
+  /* Heart shape mask — which cells are "on" */
+  /* Row 0 (top): cols 1-2, 5-6 */
+  /* Row 1: cols 0-3, 4-7 */
+  /* Row 2: cols 0-7 */
+  /* Row 3: cols 0-7 */
+  /* Row 4: cols 1-6 */
+  /* Row 5: cols 2-5 */
+  /* Row 6: col 3-4 */
+
+  .cell {
+    width: 60px;
+    height: 60px;
+    visibility: hidden;
+  }
+
+  .cell.active {
+    visibility: visible;
+  }
+
+  .polaroid {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    padding: 4px 4px 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .polaroid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Placeholder when no image is set */
+  .polaroid .placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2a0a10, #4a1520);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .polaroid:hover {
+    transform: scale(1.15) rotate(0deg) !important;
+    box-shadow: 0 10px 30px rgba(255, 80, 100, 0.5);
+    z-index: 10;
+  }
+
+  /* Slight random rotations via nth-child */
+  .cell:nth-child(3n+1) .polaroid { transform: rotate(-2deg); }
+  .cell:nth-child(3n+2) .polaroid { transform: rotate(1.5deg); }
+  .cell:nth-child(3n)   .polaroid { transform: rotate(-1deg); }
+
+  /* Staggered entrance animations */
+  .cell.active { animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; opacity: 0; }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.3); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  /* ── MESSAGE SECTION ── */
+  .message-section {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+    margin: 20px auto 80px;
+    padding: 0 30px;
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 2s ease forwards 2s;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,100,130,0.4), transparent);
+  }
+
+  .divider-heart {
+    color: #ff6b8a;
+    font-size: 1.2rem;
+    animation: heartbeat 1.5s ease-in-out infinite;
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+  }
+
+  .message-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 100, 130, 0.15);
+    border-radius: 2px;
+    padding: 40px 36px;
+    backdrop-filter: blur(10px);
+    position: relative;
+  }
+
+  .message-card::before {
+    content: '\201C';
+    position: absolute;
+    top: -20px;
+    left: 24px;
+    font-size: 5rem;
+    color: rgba(255, 100, 130, 0.2);
+    font-family: 'Playfair Display', serif;
+    line-height: 1;
+  }
+
+  .message-text {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    color: rgba(255, 220, 228, 0.9);
+    line-height: 1.8;
+    /* ✏️ EDIT YOUR MESSAGE BELOW */
+  }
+
+  .signature {
+    margin-top: 28px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: #ff6b8a;
+    font-size: 1.1rem;
+  }
+
+  /* Lightbox */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .lightbox.open { display: flex; }
+
+  .lightbox img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border: 3px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 60px rgba(255, 80, 100, 0.3);
+    animation: zoomIn 0.3s ease;
+  }
+
+  @keyframes zoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .heart-grid {
+      grid-template-columns: repeat(8, 38px);
+      grid-template-rows: repeat(7, 38px);
+      gap: 4px;
+    }
+    .cell { width: 38px; height: 38px; }
+    .polaroid { padding: 3px 3px 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="hero">
+  <p class="subtitle">a little something for you</p>
+  <h1>Every moment<br>with <span>you</span></h1>
+</div>
+
+<div class="heart-section">
+  <div class="heart-grid" id="heartGrid"></div>
+</div>
+
+<div class="message-section">
+  <div class="divider"><span class="divider-heart">♥</span></div>
+  <div class="message-card">
+    <p class="message-text" id="messageText">
+      <!-- ✏️ REPLACE THIS WITH YOUR MESSAGE -->
+      Every single one of these photos holds a memory I never want to forget.
+      You make every day feel special, and I'm so grateful to have you in my life.
+      You mean so much to me, and I'm excited to light up this heart with more memories.
+    </p>
+    <p class="signature" id="signatureName">— Nikhil 🤍</p>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<script>
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // ✏️  YOUR PHOTOS — replace each URL with your image
+  //     You can use: local file paths, Google Drive links,
+  //     Imgur links, or any direct image URL.
+  //     Add up to 20. Leave extras as "" to hide them.
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  const photos = [
+    "photo1.jpg",   // 1
+    "photo2.jpg",   // 2
+    "photo3.jpg",   // 3
+    "photo4.jpg",   // 4
+    "photo5.jpg",   // 5
+    "photo6.jpg",   // 6
+    "photo7.jpg",   // 7
+    "photo8.jpg",   // 8
+    "photo9.jpg",   // 9
+    "photo10.jpg",  // 10
+    "photo11.jpg",  // 11
+    "photo12.jpg",  // 12
+    "photo13.jpg",  // 13
+    "photo14.jpg",  // 14
+    "photo15.jpg",  // 15
+    "photo16.jpg",  // 16
+    "photo17.jpg",  // 17
+    "photo18.jpg",  // 18
+    "photo19.jpg",  // 19
+    "photo20.jpg",  // 20
+  ];
+
+  // ✏️ Your name for the signature
+  const yourName = "Nikhil";
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Heart shape: 1 = photo cell, 0 = empty
+  // 8 columns × 7 rows = 20 heart cells
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  const heartMap = [
+    [0,1,1,0,0,1,1,0],  // row 0
+    [1,1,1,1,1,1,1,1],  // row 1
+    [1,1,1,1,1,1,1,1],  // row 2
+    [1,1,1,1,1,1,1,1],  // row 3
+    [0,1,1,1,1,1,1,0],  // row 4
+    [0,0,1,1,1,1,0,0],  // row 5
+    [0,0,0,1,1,0,0,0],  // row 6
+  ];
+
+  // Build grid
+  const grid = document.getElementById('heartGrid');
+  let photoIndex = 0;
+
+  heartMap.forEach((row, r) => {
+    row.forEach((val, c) => {
+      const cell = document.createElement('div');
+      cell.className = 'cell' + (val ? ' active' : '');
+
+      if (val) {
+        const delay = (r * 8 + c) * 60;
+        cell.style.animationDelay = `${delay}ms`;
+
+        const pol = document.createElement('div');
+        pol.className = 'polaroid';
+
+        const src = photos[photoIndex] || '';
+        if (src) {
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = '';
+          img.addEventListener('click', () => openLightbox(src));
+          pol.appendChild(img);
+        } else {
+          const ph = document.createElement('div');
+          ph.className = 'placeholder';
+          ph.textContent = '🤍';
+          pol.appendChild(ph);
+        }
+
+        cell.appendChild(pol);
+        photoIndex++;
+      }
+
+      grid.appendChild(cell);
+    });
+  });
+
+  // Set signature
+  document.getElementById('signatureName').textContent = `— ${yourName} 🤍`;
+
+  // Lightbox
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+
+  function openLightbox(src) {
+    lightboxImg.src = src;
+    lightbox.classList.add('open');
+  }
+
+  lightbox.addEventListener('click', () => lightbox.classList.remove('open'));
+
+  // Floating particles
+  const particlesEl = document.getElementById('particles');
+  for (let i = 0; i < 25; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.width = p.style.height = (Math.random() * 4 + 2) + 'px';
+    p.style.animationDuration = (Math.random() * 12 + 8) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.opacity = Math.random() * 0.6 + 0.2;
+    particlesEl.appendChild(p);
+  }
+</script>
+</body>
+</html>
