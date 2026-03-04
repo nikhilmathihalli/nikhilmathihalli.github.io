@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS161 — Computer Security Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111520;
+    --surface2: #181e2e;
+    --border: #1e2a40;
+    --accent: #00e5ff;
+    --accent2: #ff4d6d;
+    --accent3: #a0ff70;
+    --accent4: #ffd166;
+    --text: #d8e0f0;
+    --muted: #6b7a99;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRID BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: 
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* HEADER */
+  header {
+    padding: 60px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .header-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-family: var(--sans);
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 60%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+  }
+  .header-sub {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 560px;
+  }
+  .progress-bar-wrap {
+    margin-top: 28px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .progress-label { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .progress-track {
+    flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden;
+    max-width: 300px;
+  }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); width: 55%; transition: width 0.6s; }
+
+  /* NAV TABS */
+  .nav-tabs {
+    display: flex; gap: 4px; flex-wrap: wrap;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+  }
+  .tab-btn {
+    background: none; border: none; cursor: pointer;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 1px;
+    color: var(--muted); text-transform: uppercase;
+    padding: 10px 18px 12px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* SECTION PANELS */
+  .panel { display: none; animation: fadeUp 0.3s ease; }
+  .panel.active { display: block; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: none; } }
+
+  /* TOPIC GRID */
+  .topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+
+  .topic-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  }
+  .topic-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    box-shadow: 0 0 24px rgba(0,229,255,0.08);
+  }
+  .card-header {
+    padding: 16px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-num { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+  .card-tag {
+    font-family: var(--mono); font-size: 9px; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 2px; letter-spacing: 1px;
+  }
+  .tag-mem { background: rgba(255,77,109,0.15); color: var(--accent2); }
+  .tag-crypto { background: rgba(0,229,255,0.1); color: var(--accent); }
+  .tag-web { background: rgba(160,255,112,0.1); color: var(--accent3); }
+  .tag-net { background: rgba(255,209,102,0.1); color: var(--accent4); }
+  .tag-prin { background: rgba(200,180,255,0.1); color: #c8b4ff; }
+
+  .card-body { padding: 16px 20px 20px; }
+  .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; line-height: 1.3; }
+  .card-desc { font-family: var(--mono); font-size: 11.5px; color: var(--muted); line-height: 1.7; }
+
+  .card-expand { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+  .card-expand.open { max-height: 800px; }
+  .card-detail {
+    border-top: 1px solid var(--border);
+    padding: 16px 20px;
+    font-family: var(--mono); font-size: 11.5px; line-height: 1.8;
+  }
+  .detail-section { margin-bottom: 14px; }
+  .detail-label { color: var(--accent); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .detail-list { color: var(--text); }
+  .detail-list li { padding-left: 12px; position: relative; color: #b0bcd0; margin-bottom: 3px; }
+  .detail-list li::before { content: '›'; position: absolute; left: 0; color: var(--accent); }
+
+  /* QUIZ */
+  .quiz-wrap { max-width: 700px; }
+  .quiz-controls {
+    display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; align-items: center;
+  }
+  .btn {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 1px;
+    text-transform: uppercase; padding: 10px 20px;
+    border-radius: 4px; cursor: pointer; transition: all 0.2s; border: none;
+  }
+  .btn-primary { background: var(--accent); color: #000; font-weight: 700; }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-outline { background: none; border: 1px solid var(--border); color: var(--muted); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-outline.selected { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,0.06); }
+
+  .q-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 28px; margin-bottom: 24px;
+  }
+  .q-meta { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-bottom: 12px; letter-spacing: 1px; }
+  .q-text { font-size: 17px; font-weight: 700; line-height: 1.5; margin-bottom: 22px; }
+  .q-options { display: flex; flex-direction: column; gap: 10px; }
+  .q-opt {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 12px 16px;
+    font-family: var(--mono); font-size: 12px; color: var(--text);
+    cursor: pointer; transition: all 0.15s; text-align: left;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .q-opt:hover { border-color: var(--accent); color: var(--accent); }
+  .q-opt.correct { border-color: var(--accent3); background: rgba(160,255,112,0.08); color: var(--accent3); }
+  .q-opt.wrong { border-color: var(--accent2); background: rgba(255,77,109,0.08); color: var(--accent2); }
+  .q-opt.disabled { pointer-events: none; }
+  .opt-key { font-weight: 700; min-width: 18px; }
+  .q-explanation {
+    margin-top: 16px; padding: 14px 16px;
+    background: rgba(0,229,255,0.05); border-left: 2px solid var(--accent);
+    font-family: var(--mono); font-size: 11.5px; color: var(--muted); line-height: 1.7;
+    border-radius: 0 4px 4px 0;
+  }
+  .score-bar {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 20px 24px; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  }
+  .score-num { font-family: var(--mono); font-size: 28px; font-weight: 700; color: var(--accent); }
+  .score-label { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+  /* CHEATSHEET */
+  .cheatsheet { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media(max-width: 640px) { .cheatsheet { grid-template-columns: 1fr; } }
+  .cs-box {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 20px;
+  }
+  .cs-title {
+    font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+  }
+  .cs-title.c-mem { color: var(--accent2); }
+  .cs-title.c-crypto { color: var(--accent); }
+  .cs-title.c-web { color: var(--accent3); }
+  .cs-title.c-net { color: var(--accent4); }
+  .cs-row { display: flex; justify-content: space-between; gap: 8px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .cs-row:last-child { border-bottom: none; }
+  .cs-key { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .cs-val { font-family: var(--mono); font-size: 11px; color: var(--text); text-align: right; flex-shrink: 0; }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before { content:''; position:absolute; left:7px; top:0; bottom:0; width:1px; background: var(--border); }
+  .tl-item { position: relative; margin-bottom: 28px; }
+  .tl-dot {
+    position: absolute; left: -28px; top: 4px;
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid var(--accent); background: var(--bg);
+  }
+  .tl-dot.done { background: var(--accent); }
+  .tl-week { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 2px; margin-bottom: 4px; }
+  .tl-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .tl-topics { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.8; }
+
+  /* FOOTER */
+  footer { margin-top: 80px; padding: 32px 0; border-top: 1px solid var(--border); }
+  .footer-text { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+  /* SCROLL */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="header-tag">UC Berkeley · Spring 2026</div>
+    <h1>CS161<br>Computer Security</h1>
+    <p class="header-sub">A synthesized study companion covering all course material: memory safety, cryptography, web security, and network security.</p>
+    <div class="progress-bar-wrap">
+      <span class="progress-label">COURSE PROGRESS</span>
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <span class="progress-label">WEEK 8 / 15</span>
+    </div>
+  </header>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="showTab('topics', this)">Topics</button>
+    <button class="tab-btn" onclick="showTab('quiz', this)">Quiz Yourself</button>
+    <button class="tab-btn" onclick="showTab('cheatsheet', this)">Cheat Sheet</button>
+    <button class="tab-btn" onclick="showTab('timeline', this)">Course Timeline</button>
+  </nav>
+
+  <!-- TOPICS PANEL -->
+  <div class="panel active" id="panel-topics">
+    <div class="topic-grid" id="topicGrid"></div>
+  </div>
+
+  <!-- QUIZ PANEL -->
+  <div class="panel" id="panel-quiz">
+    <div class="quiz-wrap">
+      <div class="quiz-controls">
+        <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-right:4px;">FILTER:</div>
+        <button class="btn btn-outline selected" onclick="setFilter('all',this)">All</button>
+        <button class="btn btn-outline" onclick="setFilter('memory',this)">Memory</button>
+        <button class="btn btn-outline" onclick="setFilter('crypto',this)">Crypto</button>
+        <button class="btn btn-outline" onclick="setFilter('web',this)">Web</button>
+        <button class="btn btn-outline" onclick="setFilter('network',this)">Network</button>
+        <button class="btn btn-primary" onclick="startQuiz()" style="margin-left:auto">New Quiz</button>
+      </div>
+      <div class="score-bar">
+        <div>
+          <div class="score-num" id="scoreDisplay">0/0</div>
+          <div class="score-label">CORRECT ANSWERS</div>
+        </div>
+        <div style="flex:1"></div>
+        <div id="streakDisplay" style="font-family:var(--mono);font-size:22px;color:var(--accent4)">🔥 0</div>
+      </div>
+      <div id="quizContainer"></div>
+    </div>
+  </div>
+
+  <!-- CHEATSHEET PANEL -->
+  <div class="panel" id="panel-cheatsheet">
+    <div class="cheatsheet" id="cheatsheetGrid"></div>
+  </div>
+
+  <!-- TIMELINE PANEL -->
+  <div class="panel" id="panel-timeline">
+    <div class="timeline" id="timelineContainer"></div>
+  </div>
+
+  <footer>
+    <p class="footer-text">Based on CS161 Spring 2026 · textbook.cs161.org · For study use only</p>
+  </footer>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────
+
+const TOPICS = [
+  {
+    id: 'principles', num: 'L01', tag: 'PRINCIPLES', tagClass: 'tag-prin',
+    title: 'Security Principles',
+    desc: 'The philosophical foundation: how to think like an attacker and design defenses.',
+    concepts: ['Confidentiality, Integrity, Availability (CIA triad)', 'Threat models and trust', 'Principle of least privilege', 'Defense in depth', 'Security vs. usability tradeoff', 'TCB (Trusted Computing Base)', 'TOCTTOU vulnerabilities'],
+    exam: ['Define a threat model for a given system', 'Identify which security principle is violated in a scenario', 'Recognize TOCTTOU race conditions'],
+    analogy: 'Think of designing a bank vault: least privilege = only tellers touch cash; defense in depth = vault + guards + cameras; threat model = assuming insider threat.'
+  },
+  {
+    id: 'x86', num: 'L02', tag: 'MEMORY', tagClass: 'tag-mem',
+    title: 'x86 Assembly & Call Stack',
+    desc: 'The substrate of memory attacks: registers, stack frames, and control flow.',
+    concepts: ['Registers: EAX, EBX, ESP (stack pointer), EBP (base pointer), EIP (instruction pointer)', 'Stack grows downward toward lower addresses', 'Stack frame: local vars, saved EBP, return address, arguments', 'CALL pushes return address; RET pops it to EIP', 'Little-endian byte ordering', 'GDB commands: break, run, next, x/20wx $esp'],
+    exam: ['Draw a stack diagram given a C function', 'Identify where return address lives relative to a buffer', 'Read/interpret x86 assembly snippets'],
+    analogy: 'The stack is like a stack of sticky notes. ESP points to the top. When you call a function, you stick a new note on top with the "where I was" address so you can return.'
+  },
+  {
+    id: 'vuln', num: 'L03-4', tag: 'MEMORY', tagClass: 'tag-mem',
+    title: 'Memory Safety Vulnerabilities',
+    desc: 'How buffer overflows, format strings, and heap corruption let attackers seize control.',
+    concepts: ['Stack buffer overflow: overwrite return address with attacker shellcode address', 'Heap overflow: corrupt malloc metadata or adjacent objects', 'Integer overflow: wrapping causes undersized buffers', 'Off-by-one errors', 'Format string attacks: %n writes, %x leaks', 'Use-after-free: dangling pointer exploitation', 'Shellcode: injected machine code, often spawns /bin/sh'],
+    exam: ['Given a vulnerable C program, identify the overflow point', 'Calculate padding needed to reach the return address', 'Explain what a format string %n write does'],
+    analogy: 'A buffer overflow is like writing an address on a sticky note, then accidentally overwriting the return address below it. Now when the function returns, it goes to YOUR address instead.'
+  },
+  {
+    id: 'mitigations', num: 'L05', tag: 'MEMORY', tagClass: 'tag-mem',
+    title: 'Memory Safety Mitigations',
+    desc: 'OS and compiler defenses: stack canaries, ASLR, DEP/NX, and how to defeat them.',
+    concepts: ['Stack canary: random value before return address; check on return', 'ASLR: randomizes base addresses of stack, heap, libraries', 'DEP/NX (No-Execute): marks stack/heap non-executable, prevents shellcode', 'Return-Oriented Programming (ROP): chains existing "gadgets" ending in RET', 'PIE (Position Independent Executables): code itself is randomized', 'RELRO: hardens GOT/PLT against overwrites', 'SafeStack, CFI (Control Flow Integrity)'],
+    exam: ['Explain why ROP defeats NX', 'What does a stack canary protect against, and what does it NOT protect against?', 'If ASLR randomizes 20 bits, how many guesses to brute-force on 32-bit?'],
+    analogy: 'Stack canary = tripwire in front of the vault. NX = lock the tunnel so only the bank can dig. ASLR = move the vault to a random location every day. ROP = use the bank\'s own forklifts to rob it.'
+  },
+  {
+    id: 'crypto-intro', num: 'L06', tag: 'CRYPTO', tagClass: 'tag-crypto',
+    title: 'Intro to Cryptography',
+    desc: 'Goals, definitions, and the attacker model that underpins all crypto primitives.',
+    concepts: ['Goals: Confidentiality, Integrity, Authentication', 'Kerckhoffs\'s principle: security from key secrecy, not algorithm secrecy', 'IND-CPA: indistinguishability under chosen-plaintext attack', 'IND-CCA: indistinguishability under chosen-ciphertext attack', 'The negligible function: security parameter λ', 'One-time pad: perfectly secret but impractical', 'Stream ciphers and pseudorandomness'],
+    exam: ['What does IND-CPA security mean in plain English?', 'Why is the one-time pad impractical?', 'State Kerckhoffs\'s principle and why it matters'],
+    analogy: 'Kerckhoffs: assume the enemy has your cipher machine. Your security must come only from the key, not from keeping the machine secret. (NSA publishes AES — they trust the key, not secrecy of the algorithm.)'
+  },
+  {
+    id: 'symmetric', num: 'L07-8', tag: 'CRYPTO', tagClass: 'tag-crypto',
+    title: 'Symmetric Cryptography (Block Ciphers)',
+    desc: 'AES, modes of operation, and why ECB is broken.',
+    concepts: ['Block cipher: maps fixed-size blocks using key; AES uses 128-bit blocks', 'ECB mode: encrypts blocks independently — reveals patterns!', 'CBC mode: XOR plaintext with previous ciphertext before encrypting; needs random IV', 'CTR mode: encrypts counter values, generates keystream; never reuse (key, nonce)', 'AES-CTR effectively turns block cipher into stream cipher', 'IV/nonce must be random and never reused per key', 'Padding oracle attacks on CBC'],
+    exam: ['Why is ECB broken? (give the penguin example)', 'If you reuse an IV in CTR mode, what can an attacker learn?', 'Draw CBC encryption for 2 blocks'],
+    analogy: 'ECB is like a bad photocopier that processes each part of a document separately — if two pages are identical, their encrypted copies look identical too. CBC adds a chain link between blocks so identical plaintext → different ciphertext.'
+  },
+  {
+    id: 'hashes', num: 'L09', tag: 'CRYPTO', tagClass: 'tag-crypto',
+    title: 'Cryptographic Hash Functions',
+    desc: 'SHA-256, collision resistance, and why hashes underpin everything.',
+    concepts: ['Properties: pre-image resistance, second pre-image resistance, collision resistance', 'Collision resistance ⟹ second pre-image resistance ⟹ pre-image resistance (NOT the reverse)', 'Birthday attack: find collision in O(√N) with N = 2^256 for SHA-256', 'SHA-2 family (SHA-256, SHA-512): Merkle-Damgård construction', 'Length extension attack: weakness of MD construction; use SHA-3 or HMAC instead', 'Cryptographic hashes are deterministic and one-way'],
+    exam: ['Describe the birthday attack; what output length defeats it at 128-bit security?', 'What is a length extension attack and which constructions are vulnerable?', 'Why can\'t you use H(key || message) as a MAC?'],
+    analogy: 'A hash is like a fingerprint. Two different people can theoretically have the same fingerprint (collision), but finding someone with your fingerprint (preimage) is astronomically hard.'
+  },
+  {
+    id: 'macs', num: 'L10-11', tag: 'CRYPTO', tagClass: 'tag-crypto',
+    title: 'MACs & Authenticated Encryption',
+    desc: 'HMAC, authenticated encryption with associated data (AEAD), and AES-GCM.',
+    concepts: ['MAC: Message Authentication Code — proves integrity + authenticity', 'HMAC(k, m) = H(k ⊕ opad || H(k ⊕ ipad || m)); immune to length extension', 'Authenticated Encryption: confidentiality + integrity together', 'Encrypt-then-MAC (safe), MAC-then-Encrypt (risky), Encrypt-and-MAC (risky)', 'AES-GCM: authenticated encryption with associated data (AEAD); standard choice', 'Never encrypt without also authenticating — leads to padding oracle attacks'],
+    exam: ['Which ordering of encrypt/MAC is safe and why?', 'What does "associated data" mean in AEAD?', 'What attack is possible if you encrypt without MAC (CBC + no auth)?'],
+    analogy: 'A MAC is like a tamper-evident seal on a package. Encryption hides the package contents. AES-GCM does both at once: hides AND seals.'
+  },
+  {
+    id: 'keyexchange', num: 'L12-13', tag: 'CRYPTO', tagClass: 'tag-crypto',
+    title: 'Key Exchange & Public-Key Crypto',
+    desc: 'Diffie-Hellman key exchange, RSA, and the discrete logarithm problem.',
+    concepts: ['DH: Alice & Bob agree on g,p; exchange g^a mod p and g^b mod p; shared secret = g^(ab) mod p', 'Discrete log problem: given g^x mod p, find x — computationally hard', 'ECDH: elliptic curve version — smaller keys, same security', 'RSA: public key (e,n), private key (d,n); encrypt: m^e mod n; decrypt: c^d mod n', 'RSA relies on hardness of factoring large n = p*q', 'Hybrid encryption: use RSA/DH to establish symmetric key, then use AES'],
+    exam: ['Trace a DH key exchange with small numbers', 'Why is DH vulnerable to man-in-the-middle without authentication?', 'What makes RSA signatures different from RSA encryption?'],
+    analogy: 'DH is like mixing paint: Alice and Bob publicly share a base color, add their private color, and get the same final mix — an eavesdropper seeing only the public mixes can\'t easily reconstruct the final color.'
+  },
+  {
+    id: 'signatures', num: 'L14', tag: 'CRYPTO', tagClass: 'tag-crypto',
+    title: 'Digital Signatures',
+    desc: 'RSA signatures, ECDSA, and the role of signatures in authentication.',
+    concepts: ['Sign with private key, verify with public key (opposite of encryption)', 'EU-CMA: existential unforgeability under chosen-message attack', 'RSA signatures: sign hash of message, not message itself', 'DSA/ECDSA: based on discrete log; deterministic variant (RFC 6979) safer', 'Never reuse a nonce in ECDSA — Sony PS3 was hacked this way', 'Signature ≠ MAC: signatures are publicly verifiable; MACs require shared secret'],
+    exam: ['Compare MAC vs digital signature: when do you use each?', 'What happens in ECDSA if k (nonce) is reused?', 'What is EU-CMA and why does it matter?'],
+    analogy: 'A digital signature is like a wax seal only you can make (private key), but anyone can verify it with your public seal mold. MACs are shared-secret seals — only people with the same mold can both make and verify.'
+  },
+  {
+    id: 'certs', num: 'L18', tag: 'CRYPTO', tagClass: 'tag-crypto',
+    title: 'Certificates & Passwords',
+    desc: 'PKI, certificate chains, and secure password storage.',
+    concepts: ['Certificate: signed statement binding public key to identity', 'X.509 certificate: contains subject, issuer, public key, signature, validity period', 'Certificate Authority (CA): trusted third party that signs certificates', 'Certificate chain: root CA → intermediate CA → end-entity cert', 'Browser trust store: pre-installed root CAs', 'Password hashing: bcrypt, scrypt, Argon2 — intentionally slow, with salt', 'Rainbow tables: precomputed hash lookups; salt defeats them', 'Password storage: NEVER store plaintext or fast-hash (MD5/SHA-1) of passwords'],
+    exam: ['Why must password hashes be salted?', 'Trace how your browser verifies a certificate for google.com', 'What is a certificate revocation and why is it hard?'],
+    analogy: 'A certificate is like a notarized ID card. The CA is the notary. Your browser ships with a "book of trusted notaries." If the notary signed it, you trust the ID.'
+  },
+  {
+    id: 'web-intro', num: 'L16-17', tag: 'WEB', tagClass: 'tag-web',
+    title: 'Web Fundamentals & Same-Origin Policy',
+    desc: 'HTTP, the DOM, cookies, and the SOP that keeps websites isolated from each other.',
+    concepts: ['HTTP: stateless request/response; methods GET, POST, etc.', 'HTML, CSS, JavaScript: structure, style, behavior', 'DOM: tree of page elements; JS can read/modify it', 'Same-Origin Policy (SOP): origin = (scheme, host, port); scripts only read resources from same origin', 'SOP prevents evil.com from reading bank.com\'s DOM via iframe', 'CORS: Cross-Origin Resource Sharing — relaxes SOP with server permission', 'Cookies: key-value pairs sent with every request to matching domain'],
+    exam: ['Given two URLs, determine if they share an origin', 'What does SOP prevent? What does it NOT prevent?', 'Why can evil.com iframe bank.com but not read its contents?'],
+    analogy: 'SOP is like a glass wall between websites: you can see a bank\'s website in an iframe, but you can\'t reach through the glass to read the text or steal the session cookie.'
+  },
+  {
+    id: 'csrf', num: 'L17', tag: 'WEB', tagClass: 'tag-web',
+    title: 'Cookies & CSRF',
+    desc: 'Session cookies, CSRF attacks, and defenses including SameSite and tokens.',
+    concepts: ['Session cookies: server-generated token stored in browser', 'Cookie attributes: HttpOnly (no JS access), Secure (HTTPS only), SameSite', 'CSRF: Cross-Site Request Forgery — tricks browser into sending authenticated request', 'CSRF works because cookies attach to ALL requests to a domain, regardless of origin', 'Defense 1: CSRF token — random secret in form/header that attacker can\'t read', 'Defense 2: SameSite=Strict/Lax cookie flag — prevents cross-site sending', 'Defense 3: Check Referer/Origin headers (weaker)'],
+    exam: ['Write out a CSRF attack step-by-step for a bank transfer', 'Why does HttpOnly not prevent CSRF?', 'Why does SameSite=Strict prevent CSRF but break some legitimate flows?'],
+    analogy: 'CSRF: imagine a malicious website that shows you a button labeled "Click me for a prize" — but behind the scenes, it\'s silently POSTing to your bank as you. Your browser helpfully adds your bank cookie. The CSRF token is a password the bank stamps on its own forms that only it knows.'
+  },
+  {
+    id: 'xss', num: 'L19', tag: 'WEB', tagClass: 'tag-web',
+    title: 'Cross-Site Scripting (XSS)',
+    desc: 'Injecting malicious scripts into trusted pages to steal cookies and deface sites.',
+    concepts: ['Stored XSS: malicious script saved in DB, served to all users', 'Reflected XSS: malicious script in URL parameter, reflected in response', 'DOM-based XSS: sink/source in client-side JS (no server round-trip)', 'Attacker goal: steal document.cookie, deface page, keylog, redirect', 'Defense: output encoding/escaping (< → &lt;)', 'Content Security Policy (CSP): whitelist of allowed script sources', 'HttpOnly cookie prevents cookie theft via XSS — but not all XSS goals', 'sanitize-html, DOMPurify: libraries for HTML sanitization'],
+    exam: ['Classify a given XSS as stored/reflected/DOM', 'What can an attacker do with XSS that they can\'t do with CSRF?', 'Write a CSP header that only allows scripts from your own origin'],
+    analogy: 'XSS is leaving graffiti (your script) inside the bank\'s lobby. Now every customer who enters the bank runs your script in their browser — as if the bank itself told them to.'
+  },
+  {
+    id: 'sqli', num: 'L21', tag: 'WEB', tagClass: 'tag-web',
+    title: 'SQL Injection',
+    desc: 'Injecting SQL through user inputs to exfiltrate, modify, or destroy data.',
+    concepts: ['Classic injection: input = \' OR 1=1 -- → always-true WHERE clause', 'UNION attack: append SELECT to leak extra columns', 'Blind SQLi: binary questions via timing or error messages', 'Second-order injection: safe input stored, later used unsafely', 'Defense: parameterized queries / prepared statements — ALWAYS use these', 'ORM (Object-Relational Mapper) usually safe but watch raw queries', 'Least privilege: DB user shouldn\'t have DROP privilege'],
+    exam: ['Rewrite a vulnerable query as a parameterized query', 'Describe a UNION-based SQLi to extract the users table', 'What is blind SQL injection and when is it necessary?'],
+    analogy: 'Imagine a bouncer who announces your name: "Entering: [your name]". You say your name is \'Alice\', close the door, and sneak in a back way. You\'ve injected commands into the announcement script.'
+  },
+  {
+    id: 'networking', num: 'L22', tag: 'NETWORK', tagClass: 'tag-net',
+    title: 'Intro to Networking',
+    desc: 'Layered model, IP, TCP/UDP, ARP, DHCP — the plumbing of the internet.',
+    concepts: ['OSI/TCP-IP layers: Application, Transport, Network, Link, Physical', 'IP: unreliable, connectionless; each packet independently routed', 'TCP: reliable, ordered, connection-oriented; 3-way handshake (SYN, SYN-ACK, ACK)', 'UDP: unreliable, no handshake; used for DNS, video, games', 'ARP: maps IP → MAC address within a LAN', 'DHCP: assigns IP addresses dynamically', 'Packet encapsulation: each layer wraps data in its header'],
+    exam: ['Draw the TCP 3-way handshake', 'Trace a packet from browser to server through all layers', 'What information is in an IP header vs TCP header?'],
+    analogy: 'Internet layers are like sending a letter: application layer = your message; TCP = envelope with delivery confirmation; IP = mailing address on the outside; link layer = the postal truck driving the last mile.'
+  },
+  {
+    id: 'network-attacks', num: 'L23-24', tag: 'NETWORK', tagClass: 'tag-net',
+    title: 'Network Attacks (ARP, DHCP, BGP)',
+    desc: 'Spoofing, hijacking, and poisoning attacks at each network layer.',
+    concepts: ['ARP poisoning/spoofing: send fake ARP replies to redirect traffic through attacker (MITM)', 'ARP has no authentication — anyone on LAN can lie', 'DHCP starvation: flood DHCP server to exhaust address pool', 'Rogue DHCP: attacker answers DHCP first, gives malicious gateway/DNS', 'BGP hijacking: advertise more-specific prefix to attract traffic', '2008 Pakistan Telecom BGP hijack took down YouTube globally', 'TCP SYN flood: exhaust server connection state', 'IP spoofing: forge source address (UDP/ICMP); TCP harder due to handshake'],
+    exam: ['Describe an ARP poisoning MITM attack step-by-step', 'How does a rogue DHCP server attack work?', 'What makes BGP hijacking hard to prevent?'],
+    analogy: 'ARP poisoning: you hang a fake "I\'m the post office" sign in your neighborhood. All mail intended for the real post office comes to you instead — you read it, then forward it so nobody notices.'
+  },
+  {
+    id: 'tls', num: 'L25', tag: 'NETWORK', tagClass: 'tag-net',
+    title: 'TLS (Transport Layer Security)',
+    desc: 'How HTTPS works: handshake, key derivation, certificates, and common attacks.',
+    concepts: ['TLS provides: confidentiality, integrity, server authentication (optionally mutual)', 'TLS 1.3 handshake: ClientHello → ServerHello + cert + Finished → client Finished', 'Cipher suite: specifies key exchange + auth + symmetric cipher + hash', 'Forward secrecy (PFS): ephemeral DH key exchange; past sessions safe if private key leaked', 'Certificate pinning: app hardcodes expected cert/pubkey', 'Downgrade attacks: POODLE (SSLv3), BEAST (CBC IV), DROWN (SSLv2)', 'HSTS: HTTP Strict Transport Security — forces HTTPS'],
+    exam: ['What does forward secrecy mean and why does it matter?', 'What protection does TLS NOT provide? (traffic analysis, metadata)', 'Walk through TLS 1.3 handshake at a high level'],
+    analogy: 'TLS handshake is like two diplomats meeting: they verify each other\'s official ID (certificates), agree on a secret code (key exchange) in a way that no recording of the meeting can decode later (forward secrecy), then speak in code.'
+  },
+  {
+    id: 'dns', num: 'L26-27', tag: 'NETWORK', tagClass: 'tag-net',
+    title: 'DNS & DNSSEC',
+    desc: 'How domain name resolution works and how it can be poisoned or secured.',
+    concepts: ['DNS hierarchy: root → TLD (.com) → authoritative → resolver → client', 'Recursive resolver caches responses for TTL duration', 'DNS cache poisoning (Kaminsky attack): race to send forged answer before legitimate one', 'Kaminsky: randomize source port + transaction ID = 2^32 space to guess', 'DNSSEC: signs DNS responses with public-key signatures', 'DNSSEC chain of trust: root KSK signs TLDs, TLDs sign domains', 'DNSSEC does NOT encrypt DNS (use DoH/DoT for that)', 'DoH (DNS-over-HTTPS), DoT (DNS-over-TLS): encrypt queries'],
+    exam: ['Describe the Kaminsky DNS poisoning attack', 'How does DNSSEC prevent cache poisoning?', 'What does DNSSEC protect against? What doesn\'t it protect?'],
+    analogy: 'DNS is the internet\'s phone book. Cache poisoning is slipping a fake page into the phone book after someone looked up a number. DNSSEC is the phone book publisher signing each page — you can verify no one tampered with it.'
+  }
+];
+
+const QUIZ_QUESTIONS = [
+  { cat:'memory', q:'A buffer overflow on the stack allows an attacker to overwrite which memory location to hijack control flow?', opts:['The heap metadata','The return address','The stack canary','The GOT entry'], ans:1, exp:'The return address sits on the stack above local variables. Overflowing a local buffer can overwrite it, redirecting execution to attacker-controlled code.' },
+  { cat:'memory', q:'Why does Return-Oriented Programming (ROP) bypass the No-Execute (NX) bit?', opts:['ROP injects shellcode into the heap instead','ROP uses memory that is already marked executable','ROP patches the page table to mark stack executable','ROP only works on 64-bit systems'], ans:1, exp:'NX prevents execution of injected shellcode. ROP chains together existing executable code (gadgets) — typically in libc or the binary itself — so no new executable memory is needed.' },
+  { cat:'memory', q:'What does a stack canary protect against, and what is its key weakness?', opts:['It prevents all memory writes; weakness is performance overhead','It detects sequential stack overflows; weakness is it can be leaked and bypassed if attacker knows its value','It prevents heap overflows; weakness is it doesn\'t work on 64-bit systems','It encrypts stack frames; weakness is key management'], ans:1, exp:'Stack canaries sit between local buffers and the saved return address. If a sequential overflow overwrites the canary, the program detects it before returning. But if the attacker can leak the canary value (e.g., via format string), they can overwrite it with the correct value.' },
+  { cat:'memory', q:'Why is ECB (Electronic Codebook) mode for AES considered insecure?', opts:['It doesn\'t use a key at all','Identical plaintext blocks produce identical ciphertext blocks, leaking structure','It requires an impractically large key','It is vulnerable to timing side-channels'], ans:1, exp:'ECB encrypts each block independently. Two identical plaintext blocks produce the same ciphertext — famously illustrated by the "ECB penguin" where an encrypted bitmap still shows the penguin outline.' },
+  { cat:'crypto', q:'What is Kerckhoffs\'s Principle?', opts:['A cipher should be unbreakable even if everything about the key is known','The security of a system should rely on the secrecy of the key, not the secrecy of the algorithm','A cipher must be published to be considered secure','Keys should be at least 256 bits long'], ans:1, exp:'Kerckhoffs\'s Principle states that security should come from key secrecy alone. The algorithm itself can be public. This is why AES, RSA, and TLS specs are all fully documented — we trust the math, not secret algorithms.' },
+  { cat:'crypto', q:'Alice wants to send Bob a message so that (1) only Bob can read it, and (2) Bob knows it came from Alice. Which operations should Alice perform?', opts:['Encrypt with Alice\'s public key, then sign with Bob\'s private key','Sign with Alice\'s private key, then encrypt with Bob\'s public key','Encrypt with Bob\'s private key, then sign with Alice\'s public key','Sign with Bob\'s public key, then encrypt with Alice\'s private key'], ans:1, exp:'Sign first with your own private key (proves authenticity), then encrypt with the recipient\'s public key (ensures only they can decrypt). Order matters: sign-then-encrypt prevents signature stripping attacks.' },
+  { cat:'crypto', q:'What is a length extension attack and which hash constructions are vulnerable?', opts:['Attacker doubles the hash output length; SHA-3 is vulnerable','Attacker computes H(m || extra) given H(m) without knowing m; SHA-1 and SHA-2 are vulnerable','Attacker finds a collision by extending the key; HMAC is vulnerable','Attacker adds padding to bypass HMAC verification; only MD5 is vulnerable'], ans:1, exp:'Merkle-Damgård constructions (MD5, SHA-1, SHA-2) are vulnerable. Given H(m), an attacker can compute H(m || padding || extension) without knowing m. This is why H(key || message) is an insecure MAC — use HMAC instead.' },
+  { cat:'crypto', q:'In ECDSA, what catastrophic weakness is introduced by reusing the nonce k?', opts:['The signature becomes malleable','The private key can be algebraically recovered','The public key is exposed','The message hash leaks'], ans:1, exp:'The ECDSA private key d can be solved algebraically if k is reused across two signatures on different messages. Sony\'s PS3 used a constant k, which allowed hackers to extract the signing key and sign arbitrary software.' },
+  { cat:'web', q:'Which of the following is a correct defense against Cross-Site Request Forgery (CSRF)?', opts:['Setting HttpOnly on the session cookie','Using HTTPS for all requests','Including a random CSRF token in forms that the server verifies','Validating the Content-Type header of POST requests'], ans:2, exp:'HttpOnly prevents JS from reading cookies but doesn\'t stop the browser from sending them in cross-origin requests. HTTPS doesn\'t prevent CSRF. The CSRF token is a random value the attacker can\'t read (SOP prevents cross-origin JS reads), so forged requests won\'t have it.' },
+  { cat:'web', q:'What distinguishes stored XSS from reflected XSS?', opts:['Stored XSS only affects authenticated users; reflected XSS affects everyone','In stored XSS, the payload is saved in the database and served to multiple users; reflected XSS is included in the URL and returned in the immediate response','Stored XSS uses script tags; reflected XSS uses event handlers','They are identical; the names are interchangeable'], ans:1, exp:'Stored (persistent) XSS saves the payload (e.g., in a comment field) so it\'s served to every subsequent visitor. Reflected XSS requires tricking a victim into clicking a crafted URL where the payload is reflected back in the response.' },
+  { cat:'web', q:'Why are parameterized queries the correct defense against SQL injection?', opts:['They encrypt the query before sending it to the database','They separate SQL code from data, so user input is always treated as a literal value and never as SQL syntax','They limit the length of user input','They run queries in a sandboxed environment'], ans:1, exp:'In a parameterized query (prepared statement), the SQL structure is compiled first. User input is passed as a parameter — it\'s data, not code. No matter what characters the input contains, it cannot alter the query\'s logic.' },
+  { cat:'network', q:'How does an ARP poisoning attack enable a Man-in-the-Middle (MITM) position?', opts:['The attacker blocks ARP requests with a firewall','The attacker sends unsolicited ARP replies claiming its MAC address corresponds to the victim\'s IP, poisoning neighbor caches','The attacker intercepts DNS queries to redirect traffic','The attacker floods the switch to force broadcast mode'], ans:1, exp:'ARP has no authentication. An attacker can broadcast fake ARP replies saying "IP 192.168.1.1 is at my MAC address." Hosts update their ARP cache, and traffic intended for the router (or victim) is sent to the attacker instead.' },
+  { cat:'network', q:'What property does TLS 1.3 provide that earlier versions lacked by default?', opts:['Content encryption','Certificate validation','Forward secrecy (via ephemeral key exchange)','Protection against DNS poisoning'], ans:2, exp:'TLS 1.3 mandates ephemeral Diffie-Hellman (ECDHE) for all key exchanges, providing forward secrecy. If a server\'s long-term private key is later compromised, past session traffic (recorded by an attacker) remains undecryptable.' },
+  { cat:'network', q:'The Kaminsky DNS cache poisoning attack improved on earlier techniques by:', opts:['Using DNSSEC to forge responses','Targeting the additional records section of DNS responses and randomizing transaction IDs and source ports','Flooding the resolver with packets faster than the legitimate server','Exploiting a buffer overflow in BIND'], ans:1, exp:'Kaminsky\'s insight: instead of poisoning a single A record (which requires waiting for the cache to expire), you can query for random subdomains (which never exist) — getting a fresh race opportunity each time — and inject a poisoned NS record for the whole domain.' },
+  { cat:'memory', q:'What is an off-by-one error and how can it lead to exploitation?', opts:['A bug where the loop index is wrong by one, allowing exactly one extra byte to be written beyond a buffer boundary','A typo in an IP address causing network failures','Using the wrong hash algorithm, off by one version','Integer overflow that shifts a value by exactly one bit'], ans:0, exp:'Writing one byte past the end of a buffer can overwrite the low byte of a saved base pointer (EBP) or other adjacent memory. This small overwrite can sometimes be chained into full control-flow hijacking.' }
+];
+
+const CHEATSHEET_DATA = [
+  { title: 'Memory Safety Quick Ref', cls: 'c-mem', rows: [
+    ['Buffer overflow target', 'Return address on stack'],
+    ['Stack grows', 'Toward lower addresses'],
+    ['Canary protects', 'Sequential overflow to ret addr'],
+    ['NX/DEP', 'Marks stack non-executable'],
+    ['ROP bypasses', 'NX by reusing .text gadgets'],
+    ['ASLR bits (32-bit)', '~16-20 bits randomization'],
+    ['Format string %n', 'Writes bytes-printed count to ptr'],
+    ['Use-after-free', 'Access freed heap memory'],
+  ]},
+  { title: 'Cryptography Quick Ref', cls: 'c-crypto', rows: [
+    ['AES block size', '128 bits'],
+    ['AES key sizes', '128, 192, 256 bits'],
+    ['ECB weakness', 'Identical blocks → identical ciphertext'],
+    ['CTR mode fatal flaw', 'Nonce reuse → XOR keystreams'],
+    ['SHA-256 output', '256 bits'],
+    ['Birthday attack cost', 'O(2^(n/2)) for n-bit hash'],
+    ['HMAC uses', 'H(k⊕opad || H(k⊕ipad || m))'],
+    ['DH security basis', 'Discrete logarithm problem'],
+    ['RSA security basis', 'Integer factorization'],
+    ['Sign with', 'Private key'],
+    ['Encrypt to', 'Public key'],
+    ['ECDSA nonce reuse', 'Leaks private key'],
+    ['Password hash', 'bcrypt / scrypt / Argon2 + salt'],
+  ]},
+  { title: 'Web Security Quick Ref', cls: 'c-web', rows: [
+    ['Origin = ', '(scheme, host, port)'],
+    ['SOP prevents', 'Cross-origin JS reads'],
+    ['HttpOnly cookie', 'Blocks JS document.cookie'],
+    ['Secure cookie', 'HTTPS-only transmission'],
+    ['SameSite=Strict', 'No cross-site sending'],
+    ['CSRF token', 'Random secret in form, checked server-side'],
+    ['Stored XSS', 'Payload saved in DB'],
+    ['Reflected XSS', 'Payload in URL, reflected'],
+    ['DOM XSS', 'Sink/source in client JS'],
+    ['XSS defense', 'Output encoding + CSP'],
+    ['SQLi defense', 'Parameterized queries always'],
+    ['UNION SQLi', 'Append SELECT to leak table'],
+  ]},
+  { title: 'Network Security Quick Ref', cls: 'c-net', rows: [
+    ['TCP handshake', 'SYN → SYN-ACK → ACK'],
+    ['ARP maps', 'IP → MAC (LAN only)'],
+    ['DHCP gives', 'IP, gateway, DNS'],
+    ['ARP has auth?', 'No — trivially spoofable'],
+    ['BGP attacks', 'Prefix hijacking (no auth)'],
+    ['TLS provides', 'Confidentiality + integrity + auth'],
+    ['Forward secrecy', 'Ephemeral DH key exchange'],
+    ['HSTS', 'Forces HTTPS, prevents downgrade'],
+    ['DNS poisoning', 'Fake answer wins the race'],
+    ['DNSSEC', 'Signs DNS with PKI (no encryption)'],
+    ['Kaminsky attack', 'Random subdomain queries to race'],
+    ['DoH / DoT', 'Encrypt DNS queries'],
+  ]},
+];
+
+const TIMELINE_DATA = [
+  { week:1, done:true, title:'Foundations', topics:'Security Principles · x86 Assembly & Call Stack' },
+  { week:2, done:true, title:'Memory Safety Attacks', topics:'Stack Buffer Overflows · Heap Overflows · Format Strings · Off-by-one · Use-after-free' },
+  { week:3, done:true, title:'Defenses & Crypto Intro', topics:'Mitigations (Canary, ASLR, NX, ROP) · Intro to Cryptography · IND-CPA/CCA · Stream Ciphers' },
+  { week:4, done:true, title:'Symmetric Crypto', topics:'Block Ciphers (AES) · ECB/CBC/CTR modes · Hash Functions (SHA-256) · Collision Resistance · Birthday Attack' },
+  { week:5, done:true, title:'MACs & Integrity', topics:'HMAC · Authenticated Encryption · Encrypt-then-MAC · AES-GCM · Padding Oracles' },
+  { week:6, done:true, title:'Asymmetric Crypto', topics:'Diffie-Hellman · ECDH · RSA Encryption · RSA Signatures · Digital Signatures · EU-CMA · ECDSA' },
+  { week:7, done:true, title:'Web Basics & CSRF', topics:'HTTP · DOM · Same-Origin Policy · CORS · Cookies (HttpOnly, SameSite) · CSRF Attacks & Defenses' },
+  { week:8, done:true, title:'Certificates & More', topics:'PKI · X.509 · Certificate Chains · Password Hashing · Randomness Bugs · Case Studies' },
+  { week:9, done:false, title:'Web Attacks', topics:'XSS (Stored/Reflected/DOM) · UI Attacks · Clickjacking · SQL Injection · CAPTCHAs' },
+  { week:10, done:false, title:'Network Fundamentals', topics:'TCP/IP Layers · TCP 3-Way Handshake · UDP · ARP · DHCP · BGP' },
+  { week:11, done:false, title:'Network Attacks', topics:'ARP Spoofing · DHCP Starvation · BGP Hijacking · IP Spoofing · SYN Flood · WPA' },
+  { week:12, done:false, title:'TLS & DNS', topics:'TLS 1.3 Handshake · Cipher Suites · Forward Secrecy · DNS Resolution · Kaminsky Attack' },
+  { week:13, done:false, title:'DNSSEC & Defenses', topics:'DNSSEC · DoH/DoT · Denial-of-Service · Firewalls · Intrusion Detection' },
+  { week:14, done:false, title:'Advanced Topics', topics:'AI Security · Adversarial ML · Prompt Injection · Evasion Attacks' },
+  { week:15, done:false, title:'Systems Security', topics:'iPhone Security · Secure Enclave · Mobile Security · Final Review' },
+];
+
+// ─────────────────────────────────────────────
+// RENDER FUNCTIONS
+// ─────────────────────────────────────────────
+
+function renderTopics() {
+  const grid = document.getElementById('topicGrid');
+  grid.innerHTML = TOPICS.map(t => `
+    <div class="topic-card" onclick="toggleCard('${t.id}')">
+      <div class="card-header">
+        <span class="card-num">${t.num}</span>
+        <span class="card-tag ${t.tagClass}">${t.tag}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">${t.title}</div>
+        <div class="card-desc">${t.desc}</div>
+      </div>
+      <div class="card-expand" id="expand-${t.id}">
+        <div class="card-detail">
+          <div class="detail-section">
+            <div class="detail-label">Key Concepts</div>
+            <ul class="detail-list">${t.concepts.map(c=>`<li>${c}</li>`).join('')}</ul>
+          </div>
+          <div class="detail-section">
+            <div class="detail-label">Exam-Ready Questions</div>
+            <ul class="detail-list">${t.exam.map(e=>`<li>${e}</li>`).join('')}</ul>
+          </div>
+          <div class="detail-section">
+            <div class="detail-label">Intuition / Analogy</div>
+            <div style="color:#b0bcd0;font-size:11.5px;line-height:1.7">${t.analogy}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleCard(id) {
+  const el = document.getElementById('expand-' + id);
+  el.classList.toggle('open');
+}
+
+// QUIZ
+let quizState = { questions: [], current: 0, score: 0, streak: 0, filter: 'all', answered: [] };
+
+function setFilter(f, btn) {
+  quizState.filter = f;
+  document.querySelectorAll('.quiz-controls .btn-outline').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function startQuiz() {
+  let pool = quizState.filter === 'all' ? [...QUIZ_QUESTIONS] : QUIZ_QUESTIONS.filter(q=>q.cat===quizState.filter);
+  pool = pool.sort(()=>Math.random()-0.5).slice(0, Math.min(8, pool.length));
+  quizState.questions = pool;
+  quizState.current = 0;
+  quizState.score = 0;
+  quizState.streak = 0;
+  quizState.answered = [];
+  updateScoreBar();
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const { questions, current } = quizState;
+  if (current >= questions.length) {
+    renderQuizEnd();
+    return;
+  }
+  const q = questions[current];
+  const keys = ['A','B','C','D'];
+  document.getElementById('quizContainer').innerHTML = `
+    <div class="q-card">
+      <div class="q-meta">QUESTION ${current+1} / ${questions.length} · ${q.cat.toUpperCase()}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-options">
+        ${q.opts.map((o,i)=>`
+          <button class="q-opt" onclick="answerQ(${i})" id="opt-${i}">
+            <span class="opt-key">${keys[i]}</span><span>${o}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div id="explanation" style="display:none"></div>
+    </div>
+  `;
+}
+
+function answerQ(i) {
+  const q = quizState.questions[quizState.current];
+  const opts = document.querySelectorAll('.q-opt');
+  opts.forEach(o => o.classList.add('disabled'));
+  opts[q.ans].classList.add('correct');
+  if (i === q.ans) {
+    quizState.score++;
+    quizState.streak++;
+  } else {
+    opts[i].classList.add('wrong');
+    quizState.streak = 0;
+  }
+  updateScoreBar();
+  const exp = document.getElementById('explanation');
+  exp.style.display = 'block';
+  exp.innerHTML = `<div class="q-explanation">💡 ${q.exp}</div>`;
+  setTimeout(()=>{ quizState.current++; renderQuestion(); }, 2200);
+}
+
+function renderQuizEnd() {
+  const { score, questions } = quizState;
+  const pct = Math.round(score/questions.length*100);
+  const msg = pct===100 ? '🏆 Perfect!' : pct>=80 ? '🔥 Excellent!' : pct>=60 ? '👍 Good effort' : '📚 Keep studying';
+  document.getElementById('quizContainer').innerHTML = `
+    <div class="q-card">
+      <div class="q-meta">QUIZ COMPLETE</div>
+      <div class="q-text" style="font-size:28px">${msg}</div>
+      <div style="font-family:var(--mono);font-size:14px;color:var(--muted);margin-top:12px">
+        You scored <span style="color:var(--accent)">${score}/${questions.length}</span> (${pct}%)
+      </div>
+      <button class="btn btn-primary" onclick="startQuiz()" style="margin-top:20px">Try Again</button>
+    </div>
+  `;
+}
+
+function updateScoreBar() {
+  const { score, questions, streak } = quizState;
+  document.getElementById('scoreDisplay').textContent = `${score}/${questions.length}`;
+  document.getElementById('streakDisplay').textContent = `🔥 ${streak}`;
+}
+
+// CHEATSHEET
+function renderCheatsheet() {
+  document.getElementById('cheatsheetGrid').innerHTML = CHEATSHEET_DATA.map(cs=>`
+    <div class="cs-box">
+      <div class="cs-title ${cs.cls}">${cs.title}</div>
+      ${cs.rows.map(r=>`
+        <div class="cs-row">
+          <span class="cs-key">${r[0]}</span>
+          <span class="cs-val">${r[1]}</span>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+// TIMELINE
+function renderTimeline() {
+  document.getElementById('timelineContainer').innerHTML = TIMELINE_DATA.map(w=>`
+    <div class="tl-item">
+      <div class="tl-dot ${w.done?'done':''}"></div>
+      <div class="tl-week">WEEK ${w.week} ${w.done ? '· COVERED' : '· UPCOMING'}</div>
+      <div class="tl-title">${w.title}</div>
+      <div class="tl-topics">${w.topics}</div>
+    </div>
+  `).join('');
+}
+
+// TAB NAV
+function showTab(name, btn) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// INIT
+renderTopics();
+renderCheatsheet();
+renderTimeline();
+startQuiz();
+</script>
+</body>
+</html>
