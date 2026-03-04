@@ -249,6 +249,50 @@
   footer { margin-top: 80px; padding: 32px 0; border-top: 1px solid var(--border); }
   .footer-text { font-family: var(--mono); font-size: 11px; color: var(--muted); }
 
+  /* RESOURCES */
+  .resource-banner {
+    margin: 32px 0 0;
+    padding: 18px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: radial-gradient(circle at top left, rgba(0,229,255,0.08), transparent),
+                radial-gradient(circle at bottom right, rgba(255,77,109,0.08), transparent),
+                var(--surface);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+  .resource-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .resource-text {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--muted);
+    flex: 1;
+    min-width: 220px;
+  }
+  .resource-link {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 8px 14px;
+    border-radius: 4px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .resource-link:hover {
+    background: rgba(0,229,255,0.08);
+  }
+
   /* SCROLL */
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
@@ -313,6 +357,17 @@
   <!-- TIMELINE PANEL -->
   <div class="panel" id="panel-timeline">
     <div class="timeline" id="timelineContainer"></div>
+  </div>
+
+  <div class="resource-banner">
+    <div class="resource-label">Practice Resource</div>
+    <p class="resource-text">
+      Work through the mock midterm to check your understanding under exam-style conditions.
+      Try it timed first, then come back here to review any shaky topics.
+    </p>
+    <a class="resource-link" href="assets/cs161-mock-midterm.pdf" target="_blank" rel="noopener">
+      Open Mock Midterm PDF
+    </a>
   </div>
 
   <footer>
